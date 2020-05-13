@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "Home";
+}
+
+@{ 
+
+    var items = (List<String>)ViewData["items"];
+}
+
+<h2>@ViewData["pageTitle"]</h2>
+<p>@ViewData["description"]</p>
+
+@if ((Boolean)ViewData["show"] == true)
+{
+<ul>
+    @foreach (var item in @items)
+    {
+        <li>@item</li>
+    }
+</ul>
+}

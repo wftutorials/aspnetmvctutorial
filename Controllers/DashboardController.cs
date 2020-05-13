@@ -24,9 +24,35 @@ namespace AspnetMvcTutorial.Controllers
             return Content("Page is: " + id.ToString() + " location is: " + location);
         }
 
-        public IActionResult Create([FromBody] string name)
+
+        [HttpPost]
+        public IActionResult Create()
         {
-            return Content("submitted for creationg:" + name);
+            string name = Request.Form["name"];
+            return Content("submitted the name as: " + name);
+        }
+
+        public IActionResult Login()
+        {
+            return Redirect("~/home/index");
+        }
+
+        public IActionResult Logout()
+        {
+            return RedirectToAction("help");
+        }
+
+        public IActionResult Home()
+        {
+            List<String> list = new List<String>();
+            list.Add("List item 1");
+            list.Add("List item 2");
+            list.Add("List item 3");
+            ViewData["items"] = list;
+            ViewData["description"] = "My home page description";
+            ViewData["pageTitle"] = "This is My Home Page";
+            ViewData["show"] = false;
+            return View();
         }
     }
 }

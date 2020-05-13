@@ -233,3 +233,212 @@ The results is shown below.
 [multiple_arguments.png]
 
 ## Getting POST data via the routes
+
+Lets send a POST request and get back the data.
+In our `DashboardController.cs` you create a function called `create`.
+
+```c#
+[HttpPost]
+public IActionResult Create()
+{
+    string name = Request.Form["name"];
+    return Content("submitted for creationg: " + name);
+}
+```
+
+So we can get from data using `Request.Form`.
+Lets see the how the results work. We will be using POSTMAN to send the request.
+
+[post_request.png]
+
+## Redirections
+
+Lets create some routes that we can redirect to.
+
+```c#
+public IActionResult Login()
+{
+    return Redirect("~/home/index");
+}
+
+public IActionResult Logout()
+{
+    return RedirectToAction("help");
+}
+```
+
+Above we have to functions. One is called `login`. This will take you the the `home/index` page.
+The second function uses `RedirectToAction` to send the user to the action in the controller called
+`help`.
+
+We can see this in action.
+
+[redirection_samples.gif]
+
+# Working with views
+
+Let check out what we can do with views.
+Lets create a `home` view for our `DashboardController.cs`.
+
+```html
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h2>Home</h2>
+
+```
+
+So we have a default template. Lets see what else we can do.
+
+## Passing data to your views
+
+Lets see how we can pass data to our views.
+We use `ViewData` to add the values we want to access in our views.
+
+```c#
+public IActionResult Home()
+{
+    ViewData["description"] = "My home page description";
+    ViewData["pageTitle"] = "This is My Home Page";
+    return View();
+}
+```
+
+We can see how we use this in our `Home.cshtml`.
+
+```html
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h2>@ViewData["pageTitle"]</h2>
+<p>@ViewData["description"]</p>
+
+```
+
+Now we can view the results below.
+
+[passing_data.png]
+
+## Passing lists
+
+Let see how we can pass lists to our views.
+
+```c#
+public IActionResult Home()
+{
+    List<String> list = new List<String>();
+    list.Add("List item 1");
+    list.Add("List item 2");
+    list.Add("List item 3");
+    ViewData["items"] = list;
+    ViewData["description"] = "My home page description";
+    ViewData["pageTitle"] = "This is My Home Page";
+    return View();
+}
+```
+
+Our `home` function creates a `new list`. We add elements to this list.
+We add our list to `ViewData`. Then we can acess it in our view.
+
+```html
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h2>@ViewData["pageTitle"]</h2>
+<p>@ViewData["description"]</p>
+
+<ul>
+    @foreach (var item in (List<String>)ViewData["items"])
+    {
+        <li>@item</li>
+    }
+</ul>
+
+```
+
+To display our items we had to cast `List<string>` on our `ViewData` items.
+
+The results are shown below.
+
+[list_items.png]
+
+Another way we can do this is
+
+```html
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+@{ 
+
+    var items = (List<String>)ViewData["items"];
+}
+
+<h2>@ViewData["pageTitle"]</h2>
+<p>@ViewData["description"]</p>
+
+<ul>
+    @foreach (var item in @items)
+    {
+        <li>@item</li>
+    }
+</ul>
+```
+
+
+## Views Control Structures
+
+Lets see how we can us `if` and `else` statements to show items.
+We will show the list of our value `show` exists.
+
+We modify the Route function as shown below in `DashboardController.cs`.
+
+```c#
+public IActionResult Home()
+{
+    List<String> list = new List<String>();
+    list.Add("List item 1");
+    list.Add("List item 2");
+    list.Add("List item 3");
+    ViewData["items"] = list;
+    ViewData["description"] = "My home page description";
+    ViewData["pageTitle"] = "This is My Home Page";
+    ViewData["show"] = false; // hide or show
+    return View();
+}
+```
+
+In the view we can check for this as shown beloww.
+
+```html
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+@{ 
+
+    var items = (List<String>)ViewData["items"];
+}
+
+<h2>@ViewData["pageTitle"]</h2>
+<p>@ViewData["description"]</p>
+
+@if ((Boolean)ViewData["show"] == true)
+{
+<ul>
+    @foreach (var item in @items)
+    {
+        <li>@item</li>
+    }
+</ul>
+}
+
+```
