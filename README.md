@@ -442,3 +442,227 @@ In the view we can check for this as shown beloww.
 }
 
 ```
+
+# Working with Layouts
+
+When we render a view we can see some menu items as shown below
+
+[layout_menu.png]
+
+This is accomplished by using layouts. Let create our own layout.
+In our `Views/Shared` directoy we create a view called `main.cshtml`.
+
+The content is shown below.
+
+```html
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>main</title>
+</head>
+<body>
+    <ul style="display:block">
+        <li style="display:inline;">Home</li>
+        <li style="display:inline">Login</li>
+    </ul>
+    <div style="padding:10px; margin:0 auto; border: 1px solid #808080;">
+        @RenderBody()
+    </div>
+</body>
+</html>
+
+```
+
+We use `@RenderBody` to display the content we will be passing through this layout.
+
+Now in our `Home.cshtml` we can change the layout for the view at the top of the file
+as shown below.
+
+```html
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/main.cshtml";
+}
+```
+
+This should allow use to use the layout we just created.
+
+[layout_template.png]
+
+# Connecting to a database
+
+To connect to a database we need to install a dependency because we will be working with a MySQL database.
+
+We need to install a `NuGet` package to work with MySql as shown below.
+
+[nuget_package.png]
+
+Head to Project and manage `NuGet` dependencies and install `MySql.Data`.
+Once you do this we can get started connetion to our databases.
+
+We create a new route called `Users` in the `DashboardController.cs` it looks like
+
+```c#
+
+public IActionResult Users()
+{
+    List<String> emails = new List<String>();
+    string connectionString = "server=localhost;user=root;password=;database=wftutorials";
+    MySqlConnection conn = new MySqlConnection(connectionString);
+    conn.Open();
+    var command = new MySqlCommand("SELECT email FROM musers limit 10;", conn);
+    var reader = command.ExecuteReader();
+    while (reader.Read())
+    {
+        var value = reader.GetValue(0).ToString();
+        emails.Add(value);
+        // do something with 'value'
+    }
+    return View(emails);
+}
+```
+
+Above we have a connection string which holds our connection information.
+We create a new `MySqlConnection` object. We open the connection.
+We then create a new `MySqlCommand` object and pass our query and the connection object.
+We run the command using `command.ExecutedReader` and while we have data we add the `emails`
+to a `string` list.
+
+We then pass the emails to our View. Doing it this way allows use to set is as the model for the view.
+
+In our view we can display our lists of emails as shown below.
+
+
+```html
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+@model List<String>;
+
+<h2>Users</h2>
+
+<ul>
+    @foreach (var item in @Model)
+    {
+        <li>@item</li>
+    }
+</ul>
+
+```
+
+Using `@model List<String>` we define the type of our model.
+Then we can use it using `@Model` the difference being common and capital letters.
+
+The results is shown below.
+
+[list_of_users.png]
+
+## Using Models
+
+To get started with models we have to do a few things. First I already have a database. So instead of doing
+migrations I will have to work backwards and reverse engineer my models.
+
+Lets download `Pomelo`. Using `NuGet` package manager.
+
+[pomelo_framework.png]
+
+Now we run the command below to create our models.
+
+
+```bash
+$ dotnet ef dbcontext scaffold "server=localhost;uid=root;pwd=;database=wftutorials" Pomelo.EntityFrameworkCore.MySql --schema wftutorials
+```
+
+My database is `wftutorials`. Yours could be whaterver you like.
+
+Once this is done we would have created models for all the tables in the database. Pay attention to this.
+
+Most importantly we created a file called `wftutorialsContext.cs` this manages connections with my database.
+Check out the full file (here).
+
+Next in our `Startup.cs` we add our Context as a service.
+
+```c#
+services.AddDbContext<wftutorialsContext>(options =>
+options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+```
+
+In our `appsettings.json` we add our `DefaultConnection` string.
+
+```json
+"ConnectionStrings": {
+"DefaultConnection": "server=localhost;user=root;password=;database=wftutorials"
+}
+```
+
+Now we are almost complete. In our `DashboardController.cs` we create a new route called `Allusers`.
+
+```c#
+public IActionResult AllUsers()
+{
+    var users = _context.Musers;
+    Console.Write(users);
+    List<String> emails = new List<String>();
+    foreach ( Musers u in users)
+    {
+        emails.Add(u.Email);
+    }
+    return View(emails);
+}
+```
+
+We pass emails as the model so in the view we can loop through and display out list.
+
+The results is has expected. Below we see our long list of users.
+
+[long_list_users.png]
+
+Our sample `Users` model can be seen here. (comment)
+
+## Getting data using WHERE
+
+We can get data conditional. Lets try using a `WHERE` query. Check out our route below.
+
+
+```c#
+
+public IActionResult UsersPlay()
+{
+    string output = "";
+    var users = _context.Musers.Where(p => p.Gender == "Male");
+    foreach(Musers u in users)
+    {
+        output += u.Email + " | " + u.Gender + "<br>";
+    }
+    Response.ContentType = "text/html";
+    return Content("<html>" + output + "</html");
+}
+```
+
+For this to work we need to make sure and add 
+
+```c#
+using System.Linq;
+```
+
+Lets pay attention to some things. We pull our data using
+
+```c#
+var users = _context.Musers.Where(p => p.Gender == "Male");
+```
+
+We only want the male genders.
+
+We then apply a `foreach` loop to get our data.
+
+Using `Response.ContentType = "text/html";` we can defined the content type.
+
+The results is shown below.
+
+[list_users_male.png]
+
+# Working with forms

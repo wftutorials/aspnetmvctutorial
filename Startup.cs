@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace AspnetMvcTutorial
 {
@@ -31,6 +33,12 @@ namespace AspnetMvcTutorial
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+           services.AddDbContext<wftutorialsContext>(options =>
+            options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+
+            //services.AddDbContextPool<DataContext>(
+           //     options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")
+           // ));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
