@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspnetMvcTutorial.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 
 namespace AspnetMvcTutorial
@@ -33,12 +36,20 @@ namespace AspnetMvcTutorial
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-           services.AddDbContext<wftutorialsContext>(options =>
-            options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AspnetMvcTutorialContext>(options =>
+          options.UseMySql(
+              Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedEmail = true)
+                .AddEntityFrameworkStores<AspnetMvcTutorialContext>();
+            //ervices.AddConr
+            //services.AddControllersWithViews();
+
+            //services.AddDbContext<wftutorialsContext>(options =>
+            // options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
             //services.AddDbContextPool<DataContext>(
-           //     options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")
-           // ));
+            //     options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")
+            // ));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -56,9 +67,11 @@ namespace AspnetMvcTutorial
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+       
 
             app.UseMvc(routes =>
             {

@@ -17,7 +17,7 @@ namespace AspnetMvcTutorial
         }
 
         public virtual DbSet<FailedJobs> FailedJobs { get; set; }
-        public virtual DbSet<Migrations> Migrations { get; set; }
+        public virtual DbSet<MyMigrations> Migrations { get; set; }
         public virtual DbSet<Musers> Musers { get; set; }
         public virtual DbSet<Post> Post { get; set; }
         public virtual DbSet<Users> Users { get; set; }
@@ -67,7 +67,7 @@ namespace AspnetMvcTutorial
                     .HasColumnType("text");
             });
 
-            modelBuilder.Entity<Migrations>(entity =>
+            modelBuilder.Entity<MyMigrations>(entity =>
             {
                 entity.ToTable("migrations");
 

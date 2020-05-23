@@ -108,6 +108,60 @@ namespace AspnetMvcTutorial.Controllers
             return Content("<html>" + output + "</html");
         }
 
-     
+        /*
+         * 
+          public IActionResult CreateUser()
+         {
+             if (Request.Method == "POST")
+             {
+                 String output = "Form submitted<br>";
+                 String firstname = Request.Form["firstname"];
+                 output += "Fistname: " + firstname + "<br>";
+                 String lastname = Request.Form["lastname"];
+                 output += "Lastname: " + lastname + "<br>";
+                 String email = Request.Form["email"];
+                 output += "Email: " + email + "</br>";
+                 String ipaddress = Request.Form["ipaddress"];
+                 output += "Ip Address: " + ipaddress + "</br>";
+                 Response.ContentType = "text/html";
+                 return Content("<html>" + output + "</html");
+             }
+             else
+             {
+
+                 return View();
+             }
+         }
+
+         */
+
+        public IActionResult CreateUser()
+        {
+            if (Request.Method == "POST")
+            {
+                String output = "Form submitted and saved successfully<br>";
+                String firstname = Request.Form["firstname"];
+                String lastname = Request.Form["lastname"];
+                String email = Request.Form["email"];
+                String ipaddress = Request.Form["ipaddress"];
+                var model = new Musers();
+                model.Firstname = firstname;
+                model.Lastname = lastname;
+                model.Email = email;
+                model.Ipaddress = ipaddress;
+                model.Gender = "male";
+                _context.Musers.Add(model);
+                _context.SaveChanges();
+                Response.ContentType = "text/html";
+                return Content("<html>" + output + "</html");
+            }
+            else
+            {
+
+                return View();
+            }
+        }
+
+
     }
 }

@@ -91,9 +91,9 @@ Now we run the app to see the results.
 
 ## Displaying a different view
 
-Lets display a different view. First we create our different view.
+Lets display a different view. First we create our different view layout file.
 We call our view `AnotherView.cshtml` now in our `HomeController.cs` we want to display this view
-when we in our `helloworld` route. Lets see how we can do this.
+when we go to our `helloworld` route. Lets see how we can do this.
 
 ```c#
 public IActionResult HelloWorld()
@@ -106,7 +106,7 @@ That is it. We can see the results below.
 
 [another_view.png]
 
-To learn  more about the `View` function check out the documentation [here](https://docs.microsoft.com/en-us/dotnet/api/system.web.mvc.controller.view?view=aspnet-mvc-5.2#System_Web_Mvc_Controller_View_System_String_System_String_System_Object_).
+To learn more about the `View` function check out the documentation [here](https://docs.microsoft.com/en-us/dotnet/api/system.web.mvc.controller.view?view=aspnet-mvc-5.2#System_Web_Mvc_Controller_View_System_String_System_String_System_Object_).
 
 
 # Routing
@@ -122,12 +122,12 @@ app.UseMvc(routes =>
 });
 ```
 
-This can be modified and edited but for now this is all we need to get started. Lets create more routes.
+This can be modified and edited but for now this is all we need to get started. Lets create some more routes.
 Learn more about routing [here](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-3.1).
 
 ## Creating a route via controllers
 
-Lets create a new route via a controller. Head to the Controllers direction and add a new controller.
+Lets create a new route via a controller. Head to the Controllers directory and add a new controller.
 We created one called `DashboardController.cs`.
 
 ```c#
@@ -143,11 +143,11 @@ namespace AspnetMvcTutorial.Controllers
 }
 ```
 
-We have and `Index` function pointing to our view. We can see this in the `Views` directory.
+We have an `Index` function pointing to our view. We can see this in the `Views` directory.
 
 [dashboard_views.png]
 
-How view as basic html
+Our view contains some basic html as shown below
 
 ```html
 
@@ -164,7 +164,7 @@ Let see it in action.
 [dashboard_route.png]
 
 
-## Another Route
+## Another Route called help
 
 Lets create a help route. In our `DashboardController.cs` we create a new route.
 
@@ -179,12 +179,13 @@ Let see the results.
 
 [help_route.png]
 
-Above the layout is rendered because we are not using a view.
+Above the layout is not rendered because we are not using a view.
+Instead we use the `Content` function.
 
-## Getting arguments
+## Getting arguments from url route
 
-Lets get arguments passed from the url path.
-We create a `page` route in `DashboardController.cs`.
+Lets get arguments passed from the request route.
+We create a new route called `page` in the `DashboardController.cs`.
 
 ```c#
 public IActionResult Page(int id)
@@ -193,7 +194,7 @@ public IActionResult Page(int id)
 }
 ```
 
-We return the `Content` based on the `id` if it exists. Let see the results.
+We show our results using the `Content` function based on the `id` if it exists. Let see the results.
 
 If it exists we have
 
@@ -215,8 +216,8 @@ public IActionResult Page(int id, string location)
 }
 ```
 
-Now we can either use `location` via and argument. Or we can use `Request.Query` to get the location.
-Which every way we choose to go the results should be the same.
+Now we can either use `location` via the function argument or we can use `Request.Query` to get the location.
+Whatever way we choose to go the results should be the same.
 
 This is using location.
 
@@ -235,7 +236,7 @@ The results is shown below.
 ## Getting POST data via the routes
 
 Lets send a POST request and get back the data.
-In our `DashboardController.cs` you create a function called `create`.
+In our `DashboardController.cs` we create a function called `Create()` as shown below.
 
 ```c#
 [HttpPost]
@@ -246,7 +247,7 @@ public IActionResult Create()
 }
 ```
 
-So we can get from data using `Request.Form`.
+So we can get form data using `Request.Form` collection.
 Lets see the how the results work. We will be using POSTMAN to send the request.
 
 [post_request.png]
@@ -267,11 +268,11 @@ public IActionResult Logout()
 }
 ```
 
-Above we have to functions. One is called `login`. This will take you the the `home/index` page.
-The second function uses `RedirectToAction` to send the user to the action in the controller called
+Above we have two functions. One is called `login`. This will take you to the `home/index` page.
+The second function uses the `RedirectToAction` function to send the user to the action in the controller called
 `help`.
 
-We can see this in action.
+We can see this in action below.
 
 [redirection_samples.gif]
 
@@ -295,7 +296,7 @@ So we have a default template. Lets see what else we can do.
 ## Passing data to your views
 
 Lets see how we can pass data to our views.
-We use `ViewData` to add the values we want to access in our views.
+We use `ViewData` to add the values we want to access in our views this is shown below.
 
 ```c#
 public IActionResult Home()
@@ -341,8 +342,13 @@ public IActionResult Home()
 }
 ```
 
-Our `home` function creates a `new list`. We add elements to this list.
-We add our list to `ViewData`. Then we can acess it in our view.
+In the `home` function:-
+
+* Our `home` function creates a new `list`. 
+* We add elements to this list.
+* We add our list to `ViewData`. 
+
+Then we can acess it in our view.
 
 ```html
 
@@ -368,7 +374,9 @@ The results are shown below.
 
 [list_items.png]
 
-Another way we can do this is
+Another way we can do this is shown below.
+We "intialize" `var items` in our view. Then we use it
+as we need to.
 
 ```html
 
@@ -395,8 +403,8 @@ Another way we can do this is
 
 ## Views Control Structures
 
-Lets see how we can us `if` and `else` statements to show items.
-We will show the list of our value `show` exists.
+Lets see how we can us `if` and `else` statements to show or hide html elements.
+We will show the list if our value `show` exists.
 
 We modify the Route function as shown below in `DashboardController.cs`.
 
@@ -415,7 +423,7 @@ public IActionResult Home()
 }
 ```
 
-In the view we can check for this as shown beloww.
+In the view we can check for this as shown below.
 
 ```html
 
@@ -442,6 +450,9 @@ In the view we can check for this as shown beloww.
 }
 
 ```
+
+Our `@if` is how we check if our `show` variable exists.
+
 
 # Working with Layouts
 
@@ -487,20 +498,23 @@ as shown below.
 }
 ```
 
-This should allow use to use the layout we just created.
+This should allow us to use the layout we just created as shown below.
 
 [layout_template.png]
 
 # Connecting to a database
 
 To connect to a database we need to install a dependency because we will be working with a MySQL database.
+Of course working with MS dataabase will be more straight forward.
+Checek out this link [here](https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/database-first-development/creating-the-web-application)
+to learn how.
 
 We need to install a `NuGet` package to work with MySql as shown below.
 
 [nuget_package.png]
 
 Head to Project and manage `NuGet` dependencies and install `MySql.Data`.
-Once you do this we can get started connetion to our databases.
+Once you do this we can get started connecting to our databases.
 
 We create a new route called `Users` in the `DashboardController.cs` it looks like
 
@@ -530,7 +544,8 @@ We then create a new `MySqlCommand` object and pass our query and the connection
 We run the command using `command.ExecutedReader` and while we have data we add the `emails`
 to a `string` list.
 
-We then pass the emails to our View. Doing it this way allows use to set is as the model for the view.
+We then pass the emails to our View. 
+Doing it this way allows us to set is as the model for the view.
 
 In our view we can display our lists of emails as shown below.
 
@@ -577,12 +592,12 @@ Now we run the command below to create our models.
 $ dotnet ef dbcontext scaffold "server=localhost;uid=root;pwd=;database=wftutorials" Pomelo.EntityFrameworkCore.MySql --schema wftutorials
 ```
 
-My database is `wftutorials`. Yours could be whaterver you like.
+My database is `wftutorials`. Yours could be whatever you like.
 
 Once this is done we would have created models for all the tables in the database. Pay attention to this.
 
 Most importantly we created a file called `wftutorialsContext.cs` this manages connections with my database.
-Check out the full file (here).
+Check out the full file [here](https://github.com/wftutorials/aspnetmvctutorial/blob/master/wftutorialsContext.cs).
 
 Next in our `Startup.cs` we add our Context as a service.
 
@@ -621,11 +636,11 @@ The results is has expected. Below we see our long list of users.
 
 [long_list_users.png]
 
-Our sample `Users` model can be seen here. (comment)
+Our sample `Users` model can be seen [here](https://github.com/wftutorials/aspnetmvctutorial/blob/master/Musers.cs).
 
-## Getting data using WHERE
+## Getting data using WHERE command
 
-We can get data conditional. Lets try using a `WHERE` query. Check out our route below.
+We can get data conditionally. Lets try using a `WHERE` query. Check out our route below.
 
 
 ```c#
@@ -643,7 +658,7 @@ public IActionResult UsersPlay()
 }
 ```
 
-For this to work we need to make sure and add 
+For this to work we need to make sure to add the code below
 
 ```c#
 using System.Linq;
@@ -655,14 +670,156 @@ Lets pay attention to some things. We pull our data using
 var users = _context.Musers.Where(p => p.Gender == "Male");
 ```
 
-We only want the male genders.
+We only want the male genders. So we filtere for gender where gender is male.
 
 We then apply a `foreach` loop to get our data.
 
-Using `Response.ContentType = "text/html";` we can defined the content type.
+Using `Response.ContentType = "text/html";` we can defined the content type
+so that it displays as html instead of just text even though we are using
+the `Content` function.
 
 The results is shown below.
 
 [list_users_male.png]
 
 # Working with forms
+
+Lets see how we can get working with forms.
+In our Dashboard folders we create a new view called `CreateUser.cshtml`.
+We add the content below. This is a basic html form with bootstrap styling.
+
+```html
+
+@{
+    ViewData["Title"] = "CreateUser";
+}
+
+<h2>CreateUser</h2>
+
+<form method="post" action="/dashboard/createuser">
+    <div class="row">
+        <div class="col-lg-6">
+            <label>Firstname</label>
+            <input name="firstname" type="text" class="form-control" placeholder="First name">
+        </div>
+        <div class="col-lg-6">
+            <label>Lastname</label>
+            <input name="lastname" type="text" class="form-control" placeholder="Last name">
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Email address</label>
+        <input name="email" type="email" class="form-control" placeholder="sample@gmail.com">
+        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+        <label>IP address</label>
+        <input name="ipaddress" type="text" class="form-control" placeholder="192.168.0.1">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+```
+
+In our `DashboardController` we create our route called `CreateUser`.
+
+```c#
+public IActionResult CreateUser()
+{
+	return View();
+}
+```
+
+The output will be as shown
+
+[create_user.png]
+
+Now lets add the conditionals to deal with if the form is submitted.
+
+First we use the `Request.Method` to confirm that it is a post request.
+The we use `Request.Form` to get our data and we add it to our `output` string.
+We then return using the `Content` function.
+
+```c#
+public IActionResult CreateUser()
+{
+    if (Request.Method == "POST")
+    {
+        String output = "Form submitted<br>";
+        String firstname = Request.Form["firstname"];
+        output += "Fistname: " + firstname + "<br>";
+        String lastname = Request.Form["lastname"];
+        output += "Lastname: " + lastname + "<br>";
+        String email = Request.Form["email"];
+        output += "Email: " + email + "</br>";
+        String ipaddress = Request.Form["ipaddress"];
+        output += "Ip Address: " + ipaddress + "</br>";
+        Response.ContentType = "text/html";
+        return Content("<html>" + output + "</html");
+    }
+    else
+    {
+
+        return View();
+    }
+}
+     
+}
+```
+
+We can see how this works below.
+
+[form_submission.gif]
+
+## Saving forms to models
+
+Lets save our forms to a model. Update our `CreateUser` function to look like below.
+We create our Model using the `new Musers()` model.
+We then add our data from the `Request.Form`.
+Then we add this model to `_context.Musers.Add()`.
+We then save our changes using `_context.SaveChanges()`.
+
+```c#
+public IActionResult CreateUser()
+{
+    if (Request.Method == "POST")
+    {
+        String output = "Form submitted and saved successfully<br>";
+        String firstname = Request.Form["firstname"];
+        String lastname = Request.Form["lastname"];
+        String email = Request.Form["email"];
+        String ipaddress = Request.Form["ipaddress"];
+        var model = new Musers();
+        model.Firstname = firstname;
+        model.Lastname = lastname;
+        model.Email = email;
+        model.Ipaddress = ipaddress;
+        model.Gender = "male";
+        _context.Musers.Add(model);
+        _context.SaveChanges();
+        Response.ContentType = "text/html";
+        return Content("<html>" + output + "</html");
+    }
+    else
+    {
+
+        return View();
+    }
+}
+```
+
+We can see the updates in our database. 
+Lets see the results below.
+
+[create_user_model.png]
+
+[user_saved_in_model.png]
+
+# User authentication
+
+Coming soon...
+
+
+# Conclusion
+
+Thank you for reading this tutorial. I hope it helped you.
+Leave a comment and tell me what you think.
